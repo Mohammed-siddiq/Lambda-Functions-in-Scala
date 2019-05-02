@@ -85,7 +85,7 @@ class MyRequestHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGa
       s"""{
          |"inputExpression" : "${op1.toString} $operator $op2",
          |"output" : $responseValue,
-         |"message" : success
+         |"message" : "success"
          }
       """.stripMargin)
 
