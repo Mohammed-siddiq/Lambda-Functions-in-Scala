@@ -86,8 +86,7 @@ class MyRequestHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGa
          |"inputExpression" : "${op1.toString} $operator $op2",
          |"output" : $responseValue,
          |"message" : "success"
-         }
-      """.stripMargin)
+         |}""".stripMargin)
 
     response.setHeaders(Map("Content-Type" -> "application/json").asJava)
     return response
