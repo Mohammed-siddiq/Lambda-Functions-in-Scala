@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "scalapb/scalapb.proto";
+import "google/api/annotations.proto";
+
+option (scalapb.options) = {
+  package_name: "io.grpc.calculator"
+  flat_package: true
+};
+
+message Input {
+
+    double op1 = 1;
+
+    double op2 = 2;
+
+    string operator = 3;
+
+}
+
+message Response {
+    string inputExpression = 1;
+    double output = 2;
+}
+
+service Calculator {
+    rpc Calculate (Input) returns (Response);
+}
