@@ -21,6 +21,7 @@ message Input {
 message Response {
     string inputExpression = 1;
     double output = 2;
+    string message = 3;
 }
 
 service Calculator {

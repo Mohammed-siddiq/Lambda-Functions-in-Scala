@@ -21,20 +21,33 @@ class MyRequestHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGa
     lambdaLogger.log("Request received...")
 
     val decodedString = Base64.getDecoder.decode(request.getBody)
-    val givenInput = Input.parseFrom(decodedString)
+    val inputProto = Input.parseFrom(decodedString)
 
-    lambdaLogger.log(givenInput.toString)
+    lambdaLogger.log(inputProto.toString)
 
-    val responseProto = givenInput.operator match {
-      case "+" => Response((givenInput.op1 + givenInput.op2).toString)
-      case "-" => Response((givenInput.op1 - givenInput.op2).toString)
-      case "*" => Response((givenInput.op1 * givenInput.op2).toString)
-      case "/" => Response((givenInput.op1 / givenInput.op2).toString)
-      case _ => Response("Invalid operator passed : Expected syntax : x operand y")
+    val responseValue = inputProto.operator match {
+      case "+" => (inputProto.op1 + inputProto.op2)
+      case "-" => (inputProto.op1 - inputProto.op2)
+      case "*" => (inputProto.op1 * inputProto.op2)
+      case "/" => (inputProto.op1 / inputProto.op2)
+      case _ => "Error : Format : op1 operator op2"
     }
 
     lambdaLogger.log("Returning response....")
 
+    val responseProto = Response().update(
+      _.inputExpression := inputProto.op1.toString + inputProto.operator.toString + inputProto.op2.toString,
+      _.message := responseValue.toString
+    )
+
+
+    if (!responseValue.toString.contains("Error")) {
+      responseProto.update(_.message := "Success",
+        _.output := responseValue.toString.toDouble
+      )
+    }
+
+    //    val responseProto = Response(inputProto.op2.toString + inputProto.operator + inputProto.op2, responseValue.toString.toDouble)
     lambdaLogger.log(responseProto.toString)
     val response = new APIGatewayProxyResponseEvent
     response.setBody(Base64.getEncoder.encodeToString(responseProto.toByteArray))
