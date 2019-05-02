@@ -23,8 +23,10 @@ class MyRequestHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGa
     val decodedString = Base64.getDecoder.decode(request.getBody)
     val inputProto = Input.parseFrom(decodedString)
 
+    lambdaLogger.log("Protobuf received")
+    lambdaLogger.log("-------------------------")
     lambdaLogger.log(inputProto.toString)
-
+    lambdaLogger.log("-------------------------")
     val responseValue = inputProto.operator match {
       case "+" => (inputProto.op1 + inputProto.op2)
       case "-" => (inputProto.op1 - inputProto.op2)
@@ -33,22 +35,17 @@ class MyRequestHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGa
       case _ => "Error : Format : op1 operator op2"
     }
 
-    lambdaLogger.log("Returning response....")
+    lambdaLogger.log("Returning Protobuf....")
 
     val responseProto = Response().update(
       _.inputExpression := inputProto.op1.toString + inputProto.operator.toString + inputProto.op2.toString,
-      _.message := responseValue.toString
+      _.message := "Success",
+      _.output := responseValue.toString.toDouble
     )
 
-
-    if (!responseValue.toString.contains("Error")) {
-      responseProto.update(_.message := "Success",
-        _.output := responseValue.toString.toDouble
-      )
-    }
-
-    //    val responseProto = Response(inputProto.op2.toString + inputProto.operator + inputProto.op2, responseValue.toString.toDouble)
+    lambdaLogger.log("-------------------------")
     lambdaLogger.log(responseProto.toString)
+    lambdaLogger.log("-------------------------")
     val response = new APIGatewayProxyResponseEvent
     response.setBody(Base64.getEncoder.encodeToString(responseProto.toByteArray))
 
