@@ -18,7 +18,12 @@ class MyRequestHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGa
 
     lambdaLogger.log("GRPC request....")
 
+
+    lambdaLogger.log("Raw body " + request.getBody)
+
     val decodedString = Base64.getDecoder.decode(request.getBody)
+
+    lambdaLogger.log(decodedString)
     val inputProto = Input.parseFrom(decodedString)
 
     lambdaLogger.log("Protobuf received")
