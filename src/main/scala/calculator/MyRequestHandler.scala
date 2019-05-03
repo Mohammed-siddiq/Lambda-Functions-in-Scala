@@ -10,6 +10,11 @@ import scala.collection.JavaConverters._
 import com.amazonaws.services.lambda.runtime.Context
 
 
+/**
+  * Aws Lambda request handler. Which accepts both ProtoBuffers and JSON content type.
+  * Based on the content type invokes the respective handlers and returns the response in ProtoBuff or JSON
+  * accordingly
+  */
 class MyRequestHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent] {
 
 
@@ -57,6 +62,12 @@ class MyRequestHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGa
     return response
   }
 
+  /**
+    *
+    * @param request API GateWay request with JSON content type and Query params
+    * @param context lambda context
+    * @return APIGateway Response
+    */
   def runRestCalculator(request: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent = {
 
     val lambdaLogger = context.getLogger
@@ -98,6 +109,10 @@ class MyRequestHandler extends RequestHandler[APIGatewayProxyRequestEvent, APIGa
 
   }
 
+  /**
+    * Default Request handler that accepts both Proto and JSON content type
+    *
+    */
   override def handleRequest(request: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent = {
 
     context.getLogger.log("Request received...")
