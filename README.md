@@ -2,11 +2,15 @@
 
 AWS Lambda implementation with Scala and Grpc running a simple calculator functionality.
 Also supports REST requests (communication with JSON over Http).
+
+[Link to Lambda clients project](https://bitbucket.org/Iam_MohammedSiddiq/mohammed_siddiq_hw6_clients)
+
  
 # Description
 
 Uses ProtoBuffers for communication where the lambda receives request as a protobuff
 binary and responds the request with a protobuff.
+
 
 
 ## Protcol Buffers
